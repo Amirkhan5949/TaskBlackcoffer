@@ -14,7 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taskblackcoffer.utils.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -22,7 +24,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class VerificationActivity extends AppCompatActivity {
@@ -31,15 +35,22 @@ public class VerificationActivity extends AppCompatActivity {
     private TextView resend;
     private String number,id;
     private FirebaseAuth mAuth;
+    private Constants.AuthType authType;
+    private Constants.Auth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
+        Log.i("sjchd", "registration: "+getIntent().getStringExtra("password"));
+
         otp = findViewById(R.id.editText);
         verifycode = findViewById(R.id.verifycode);
         resend = findViewById(R.id.resend);
+        authType = (Constants.AuthType)getIntent().getSerializableExtra("authType");
+        auth = (Constants.Auth)getIntent().getSerializableExtra("auth");
+
 
         mAuth = FirebaseAuth.getInstance();
         number = getIntent().getStringExtra("number");
@@ -58,7 +69,7 @@ public class VerificationActivity extends AppCompatActivity {
                 }
                 else {
                      PhoneAuthCredential credential = PhoneAuthProvider.getCredential(id, otp.getText().toString().replace(" ",""));
-                    signInWithPhoneAuthCredential(credential);
+                     signInWithPhoneAuthCredential(credential);
                 }
             }
         });
@@ -116,18 +127,56 @@ public class VerificationActivity extends AppCompatActivity {
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i("djcbjsdb", "onFailure: "+e.toString());
+                        Toast.makeText(VerificationActivity.this, "onFailure: "+e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                          if (task.isSuccessful()) {
-                            startActivity(new Intent(VerificationActivity.this,MainActivity.class));
-                            finish();
-                            FirebaseUser user = task.getResult().getUser();
-                            // ...
+                             if(auth==Constants.Auth.REGISTRATION){
+                                 registration();
+                             }
+                             else {
+                                 Toast.makeText(VerificationActivity.this, "Type Login ", Toast.LENGTH_SHORT).show();
+                             }
+
+
                         } else {
                             Toast.makeText(VerificationActivity.this, "Verification Filed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private void registration() {
+
+
+
+        HashMap<String,Object> map = new HashMap<>();
+        map.put(Constants.User.email,getIntent().getStringExtra("email"));
+        map.put(Constants.User.number,number);
+        map.put(Constants.User.password,getIntent().getStringExtra("password"));
+        map.put(Constants.User.login_with,authType);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child(Constants.User.key)
+                .child(FirebaseAuth.getInstance().getUid())
+                .setValue(map)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        startActivity(new Intent(VerificationActivity.this, DashBoardActivity.class));
+                        finish();
+                    }
+                });
+
+
+
+
     }
 }

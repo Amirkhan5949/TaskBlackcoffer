@@ -1,8 +1,5 @@
 package com.example.taskblackcoffer;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.taskblackcoffer.utils.Constants;
-import com.example.taskblackcoffer.utils.Loader;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -27,50 +24,41 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
-public class RegistrationActivity extends AppCompatActivity {
-
-
+public class LoginActivity extends AppCompatActivity {
+    private static final String EMAIL = "email";
     private ImageView fb;
-    private EditText email,password;
-    private Button register;
+    private EditText email, password;
+    private Button login;
     private TextView signup;
-    private int RC_SIGN_IN=0;
+    private int RC_SIGN_IN = 0;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager callbackManager;
-    private SignInButton signInButton;
-    private static final String EMAIL = "email";
-    private Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
-
+        setContentView(R.layout.activity_main);
 
         init();
 
-        loginfb();
-
-        googleopt();
 
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 LoginManager.getInstance().logInWithReadPermissions(
-                        RegistrationActivity.this,
+                        LoginActivity.this,
                         Arrays.asList("email", "public_profile")
                 );
             }
         });
 
+        loginfb();
+
+        SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,20 +66,25 @@ public class RegistrationActivity extends AppCompatActivity {
                 startActivityForResult(signInIntent, RC_SIGN_IN);
             }
         });
-
-
-
+        googleopt();
 
 
     }
+
+    private void googleopt() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    }
+
     private void init() {
         fb = findViewById(R.id.imageView2);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
-        register = findViewById(R.id.register);
+        login = findViewById(R.id.login);
         signup = findViewById(R.id.signup);
-        signInButton = findViewById(R.id.sign_in_button);
-        loader = new Loader(this);
+
     }
 
     private void loginfb() {
@@ -105,28 +98,21 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
-                Toast.makeText(RegistrationActivity.this, "successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "successful", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancel() {
                 // App code
-                Toast.makeText(RegistrationActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
                 // App code
-                Toast.makeText(RegistrationActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void googleopt() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
 
@@ -147,42 +133,6 @@ public class RegistrationActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            final String email =  account.getEmail();
-            loader.show();
-
-            FirebaseDatabase.getInstance().getReference()
-                    .child(Constants.User.key)
-                    .orderByChild("email")
-                    .equalTo(email)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.getChildrenCount()==0){
-                                loader.dismiss();
-
-                                Intent intent = new Intent(RegistrationActivity.this,PasswordActivity.class);
-                                intent.putExtra("email",email);
-                                intent.putExtra("authType",Constants.AuthType.GOOGLE);
-                                intent.putExtra("auth",Constants.Auth.REGISTRATION);
-                                startActivity(intent);
-
-                                Toast.makeText(RegistrationActivity.this, "Ok...", Toast.LENGTH_SHORT).show();
-                                Log.i("dkvcdfklm", "Ok : ");
-                            }
-                            else {
-                                loader.dismiss();
-                                Log.i("dkvcdfklm", "not ok.. : ");
-                                Toast.makeText(RegistrationActivity.this, "User already exist.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-
             Toast.makeText(this, "Succesfull", Toast.LENGTH_SHORT).show();
         } catch (ApiException e) {
 
@@ -191,6 +141,5 @@ public class RegistrationActivity extends AppCompatActivity {
             Log.i("adasfsd", "handleSignInResult: " + e.toString());
         }
     }
-
 
 }

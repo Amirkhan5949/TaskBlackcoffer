@@ -10,9 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.taskblackcoffer.utils.Constants;
 import com.hbb20.CountryCodePicker;
 
 public class PhioneAuthentication extends AppCompatActivity {
+
     private CountryCodePicker countryCodePicker;
     private EditText number;
     private Button next;
@@ -39,10 +41,14 @@ public class PhioneAuthentication extends AppCompatActivity {
                 else {
                     Intent intent = new Intent(PhioneAuthentication.this,VerificationActivity.class);
                     intent.putExtra("number",countryCodePicker.getFullNumberWithPlus().replace(" ",""));
+                    intent.putExtra("email",getIntent().getStringExtra("email"));
+                    intent.putExtra("authType", (Constants.AuthType)getIntent().getSerializableExtra("authType"));
+                    intent.putExtra("auth", (Constants.Auth)getIntent().getSerializableExtra("auth"));
+                    intent.putExtra("password", getIntent().getStringExtra("password"));
+
                     startActivity(intent);
                     finish();
                 }
-
             }
         });
 

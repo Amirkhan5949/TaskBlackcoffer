@@ -24,6 +24,7 @@ android {
 }
 
 dependencies {
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -32,13 +33,21 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    //firebase
     implementation 'com.google.firebase:firebase-analytics:17.3.0'
     implementation 'com.google.firebase:firebase-auth:19.3.0'
-    implementation 'com.hbb20:ccp:2.3.2'
+    implementation 'com.google.firebase:firebase-database:19.2.1'
+
+    //google
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
 
-    implementation 'com.github.Sumudu-Sahan:LinkedInManager:1.00.02'
+    //facebook
     implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
+
+    //others
+    implementation 'com.hbb20:ccp:2.3.2'
+    implementation "com.airbnb.android:lottie:3.4.0"
+    implementation 'com.orhanobut:dialogplus:1.11@aar'
 
 
 }

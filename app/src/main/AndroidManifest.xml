@@ -12,17 +12,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity"></activity>
-        <activity android:name=".RegistrationActivity" />
-        <activity android:name=".VerificationActivity" />
-        <activity android:name=".PhioneAuthentication" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".PasswordActivity"></activity>
+        <activity android:name=".DashBoardActivity" />
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".RegistrationActivity" />
+        <activity android:name=".VerificationActivity" />
+        <activity android:name=".PhioneAuthentication" />
+        <activity android:name=".LoginActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
