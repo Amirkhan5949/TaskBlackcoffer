@@ -75,6 +75,7 @@ public class VerificationActivity extends AppCompatActivity {
                      PhoneAuthCredential credential = PhoneAuthProvider.getCredential(id, otp.getText().toString().replace(" ",""));
                      signInWithPhoneAuthCredential(credential);
                 }
+
             }
         });
 
@@ -156,6 +157,7 @@ public class VerificationActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(VerificationActivity.this, "Verification Filed", Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 });
     }

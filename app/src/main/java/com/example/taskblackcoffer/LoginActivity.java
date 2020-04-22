@@ -2,6 +2,7 @@ package com.example.taskblackcoffer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String EMAIL = "email";
@@ -53,6 +55,76 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         init();
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final String email = LoginActivity.this.email.getText().toString().replace(" ","");
+                final String password = LoginActivity.this.password.getText().toString().replace(" ","");
+
+                if(email.length()==0){
+                    Toast.makeText(LoginActivity.this, "Enter email address.", Toast.LENGTH_SHORT).show();
+                }
+                else if(!Pattern.compile("^[a-zA-Z0-9_+&*-]+(?:\\."+
+                        "[a-zA-Z0-9_+&*-]+)*@" +
+                        "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                        "A-Z]{2,7}$").matcher(email).matches()){
+                    Toast.makeText(LoginActivity.this, "Enter valid email address.", Toast.LENGTH_SHORT).show();
+                }
+                else if(TextUtils.isEmpty(password)){
+                    Toast.makeText(LoginActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
+                }
+                else if(password.length()<6){
+                    Toast.makeText(LoginActivity.this, "Enter right password", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    loader.show();
+
+                    FirebaseDatabase.getInstance().getReference()
+                            .child(Constants.User.key)
+                            .orderByChild(Constants.User.email)
+                            .equalTo(email)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.getChildrenCount()!=0){
+                                        loader.dismiss();
+                                       String password1 = dataSnapshot.getChildren().iterator().next().child(Constants.User.password).getValue().toString();
+                                       if (password1.equals(password)){
+                                           loader.dismiss();
+                                           String number=dataSnapshot.getChildren().iterator().next().child(Constants.User.number).getValue().toString();
+                                           Intent intent=new Intent(LoginActivity.this,VerificationActivity.class);
+                                           intent.putExtra("number",number);
+                                           intent.putExtra("authType", (Constants.AuthType.EMAIL));
+                                           intent.putExtra("auth", (Constants.Auth.LOGIN));
+                                           startActivity(intent);
+                                       }else {
+                                           loader.dismiss();
+                                           Toast.makeText(LoginActivity.this, "Enter the right password", Toast.LENGTH_SHORT).show();
+                                       }
+
+                                    }
+                                    else {
+                                        loader.dismiss();
+                                        Toast.makeText(LoginActivity.this, "Enter valid email", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+
+                }
+
+
+            }
+        });
 
 
         fb.setOnClickListener(new View.OnClickListener() {
