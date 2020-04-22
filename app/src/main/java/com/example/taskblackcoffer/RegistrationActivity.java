@@ -1,5 +1,7 @@
 package com.example.taskblackcoffer;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,8 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -27,36 +27,38 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String EMAIL = "email";
-    private ImageView fb;
-    private EditText email, password;
-    private Button login;
-    private TextView signup;
-    private int RC_SIGN_IN = 0;
+public class RegistrationActivity extends AppCompatActivity {
+
+
+    ImageView fb;
+    EditText email,password;
+    Button register;
+    TextView signup;
+    int RC_SIGN_IN=0;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager callbackManager;
-
+    private static final String EMAIL = "email";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registration);
+
 
         init();
-
 
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 LoginManager.getInstance().logInWithReadPermissions(
-                        MainActivity.this,
+                        RegistrationActivity.this,
                         Arrays.asList("email", "public_profile")
                 );
             }
         });
 
         loginfb();
+
 
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -70,19 +72,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-    private void googleopt() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-    }
-
     private void init() {
         fb = findViewById(R.id.imageView2);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
-        login = findViewById(R.id.login);
+        register = findViewById(R.id.register);
         signup = findViewById(R.id.signup);
 
     }
@@ -98,21 +92,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
-                Toast.makeText(MainActivity.this, "successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegistrationActivity.this, "successful", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancel() {
                 // App code
-                Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegistrationActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
                 // App code
-                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegistrationActivity.this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void googleopt() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
 
@@ -141,5 +142,6 @@ public class MainActivity extends AppCompatActivity {
             Log.i("adasfsd", "handleSignInResult: " + e.toString());
         }
     }
+
 
 }
