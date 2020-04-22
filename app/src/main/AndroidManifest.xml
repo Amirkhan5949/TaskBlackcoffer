@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".VerificationActivity" />
-        <activity android:name=".PhioneAuthentication" />
+        <activity android:name=".PhoneAuthentication" />
         <activity android:name=".LoginActivity" />
 
         <meta-data

@@ -11,8 +11,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.taskblackcoffer.utils.Constants;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
 
 public class PasswordActivity extends AppCompatActivity {
 
@@ -34,11 +32,11 @@ public class PasswordActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(password.getText().toString())){
                     Toast.makeText(PasswordActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
                 }
-                else if(password.getText().toString().replace(" ","").length()!=6){
+                else if(password.getText().toString().replace(" ","").length()<6){
                     Toast.makeText(PasswordActivity.this, "Enter right password", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Intent intent = new Intent(PasswordActivity.this,PhioneAuthentication.class);
+                    Intent intent = new Intent(PasswordActivity.this, PhoneAuthentication.class);
                     intent.putExtra("email",getIntent().getStringExtra("email"));
                     intent.putExtra("authType", (Constants.AuthType)getIntent().getSerializableExtra("authType"));
                     intent.putExtra("auth", (Constants.Auth)getIntent().getSerializableExtra("auth"));

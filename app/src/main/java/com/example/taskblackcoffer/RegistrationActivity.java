@@ -1,10 +1,10 @@
 package com.example.taskblackcoffer;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taskblackcoffer.authUtils.Common;
+import com.example.taskblackcoffer.authUtils.callback.BooleanCallback;
 import com.example.taskblackcoffer.utils.Constants;
 import com.example.taskblackcoffer.utils.Loader;
 import com.facebook.CallbackManager;
@@ -27,10 +29,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -79,7 +77,53 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String email = RegistrationActivity.this.email.getText().toString().replace(" ","");
+                final String password = RegistrationActivity.this.password.getText().toString().replace(" ","");
 
+                if(email.length()==0){
+                    Toast.makeText(RegistrationActivity.this, "Enter email address.", Toast.LENGTH_SHORT).show();
+                }
+                else if(!Pattern.compile("^[a-zA-Z0-9_+&*-]+(?:\\."+
+                        "[a-zA-Z0-9_+&*-]+)*@" +
+                        "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                        "A-Z]{2,7}$").matcher(email).matches()){
+                    Toast.makeText(RegistrationActivity.this, "Enter valid email address.", Toast.LENGTH_SHORT).show();
+                }
+                else if(TextUtils.isEmpty(password)){
+                    Toast.makeText(RegistrationActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
+                }
+                else if(password.length()<6){
+                    Toast.makeText(RegistrationActivity.this, "Enter right password", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    loader.show();
+                    Common.checkEmailRegistration(email, new BooleanCallback() {
+                        @Override
+                        public void callback(boolean isValid) {
+                            if(isValid){
+                                loader.dismiss();
+                                Intent intent = new Intent(RegistrationActivity.this,PhoneAuthentication.class);
+                                intent.putExtra("email",email);
+                                intent.putExtra("password",password);
+                                intent.putExtra("authType",Constants.AuthType.EMAIL);
+                                intent.putExtra("auth",Constants.Auth.REGISTRATION);
+                                startActivity(intent);
+                            }
+                            else {
+                                loader.dismiss();
+                                Toast.makeText(RegistrationActivity.this, "Email already exist.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+
+
+                }
+            }
+        });
 
 
 
@@ -150,37 +194,24 @@ public class RegistrationActivity extends AppCompatActivity {
             final String email =  account.getEmail();
             loader.show();
 
-            FirebaseDatabase.getInstance().getReference()
-                    .child(Constants.User.key)
-                    .orderByChild("email")
-                    .equalTo(email)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.getChildrenCount()==0){
-                                loader.dismiss();
-
-                                Intent intent = new Intent(RegistrationActivity.this,PasswordActivity.class);
-                                intent.putExtra("email",email);
-                                intent.putExtra("authType",Constants.AuthType.GOOGLE);
-                                intent.putExtra("auth",Constants.Auth.REGISTRATION);
-                                startActivity(intent);
-
-                                Toast.makeText(RegistrationActivity.this, "Ok...", Toast.LENGTH_SHORT).show();
-                                Log.i("dkvcdfklm", "Ok : ");
-                            }
-                            else {
-                                loader.dismiss();
-                                Log.i("dkvcdfklm", "not ok.. : ");
-                                Toast.makeText(RegistrationActivity.this, "User already exist.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+            Common.checkEmailRegistration(email, new BooleanCallback() {
+                @Override
+                public void callback(boolean isValid) {
+                    if(isValid){
+                        loader.dismiss();
+                        Intent intent = new Intent(RegistrationActivity.this,PasswordActivity.class);
+                        intent.putExtra("email",email);
+                        intent.putExtra("authType",Constants.AuthType.GOOGLE);
+                        intent.putExtra("auth",Constants.Auth.REGISTRATION);
+                        startActivity(intent);
+                    }
+                    else {
+                        loader.dismiss();
+                        Log.i("dkvcdfklm", "not ok.. : ");
+                        Toast.makeText(RegistrationActivity.this, "User already exist.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
 
             Toast.makeText(this, "Succesfull", Toast.LENGTH_SHORT).show();

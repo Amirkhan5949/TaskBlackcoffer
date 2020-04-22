@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taskblackcoffer.utils.Constants;
+import com.example.taskblackcoffer.utils.Loader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +38,7 @@ public class VerificationActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Constants.AuthType authType;
     private Constants.Auth auth;
+    private Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class VerificationActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         number = getIntent().getStringExtra("number");
+        loader = new Loader(this);
 
         sendVerificationCode();
 
@@ -68,6 +71,7 @@ public class VerificationActivity extends AppCompatActivity {
                     Toast.makeText(VerificationActivity.this, "Enter right otp", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    loader.show();
                      PhoneAuthCredential credential = PhoneAuthProvider.getCredential(id, otp.getText().toString().replace(" ",""));
                      signInWithPhoneAuthCredential(credential);
                 }
@@ -130,6 +134,7 @@ public class VerificationActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        loader.dismiss();
                         Log.i("djcbjsdb", "onFailure: "+e.toString());
                         Toast.makeText(VerificationActivity.this, "onFailure: "+e.toString(), Toast.LENGTH_SHORT).show();
                     }
@@ -142,6 +147,7 @@ public class VerificationActivity extends AppCompatActivity {
                                  registration();
                              }
                              else {
+                                 loader.dismiss();
                                  Toast.makeText(VerificationActivity.this, "Type Login ", Toast.LENGTH_SHORT).show();
                              }
 
@@ -170,6 +176,7 @@ public class VerificationActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        loader.dismiss();
                         startActivity(new Intent(VerificationActivity.this, DashBoardActivity.class));
                         finish();
                     }
