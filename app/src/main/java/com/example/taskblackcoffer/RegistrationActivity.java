@@ -20,6 +20,8 @@ import com.example.taskblackcoffer.utils.Loader;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -29,6 +31,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -149,6 +154,74 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
+                loader.show();
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.v("LoginActivity", response.toString());
+
+                                // Application code
+                                String email = "";
+                                String id = "";
+
+                                try {
+                                    email = object.getString("email");
+
+                                }
+                                catch (JSONException e) {
+                                    e.printStackTrace();
+
+                                }
+                                try {
+                                    id= object.getString("id");
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+
+                                }
+
+                                if ((!email.equals(""))&&(!id.equals(""))){
+                                    final String finalId = id;
+                                    final String finalEmail = email;
+                                    Common.checkEmailRegistration(email, new BooleanCallback() {
+                                       @Override
+                                       public void callback(boolean isValid) {
+                                           if(isValid){
+                                               loader.dismiss();
+                                               Intent intent=new Intent(RegistrationActivity.this,PasswordActivity.class);
+                                               intent.putExtra("Fid", finalId);
+                                               intent.putExtra("email", finalEmail);
+                                               intent.putExtra("authType",Constants.AuthType.FACEBOOK);
+                                               intent.putExtra("auth",Constants.Auth.REGISTRATION);
+                                               startActivity(intent);
+                                           }
+                                           else {
+                                               loader.dismiss();
+                                               Toast.makeText(RegistrationActivity.this, "You already registeered.", Toast.LENGTH_SHORT).show();
+                                           }
+                                       }
+                                   });
+                                }
+                                else if (email.equals("")&&(!id.equals(""))){
+                                    Intent intent=new Intent(RegistrationActivity.this,EmailActivity.class);
+                                    intent.putExtra("Fid",id);
+                                    intent.putExtra("authType",Constants.AuthType.FACEBOOK);
+                                    intent.putExtra("auth",Constants.Auth.REGISTRATION);
+                                    startActivity(intent);
+                                }
+
+
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender,birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+
+
                 Toast.makeText(RegistrationActivity.this, "successful", Toast.LENGTH_SHORT).show();
             }
 

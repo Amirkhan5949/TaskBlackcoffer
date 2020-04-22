@@ -33,6 +33,8 @@ public class PhoneAuthentication extends AppCompatActivity {
         next = findViewById(R.id.next);
         countryCodePicker.registerCarrierNumberEditText(number);
         loader = new Loader(this);
+        final String Fid=getIntent().getStringExtra("Fid");
+
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +61,7 @@ public class PhoneAuthentication extends AppCompatActivity {
                                 intent.putExtra("authType", (Constants.AuthType)getIntent().getSerializableExtra("authType"));
                                 intent.putExtra("auth", (Constants.Auth)getIntent().getSerializableExtra("auth"));
                                 intent.putExtra("password", getIntent().getStringExtra("password"));
+                                intent.putExtra("Fid",Fid);
 
                                 startActivity(intent);
                                 finish();

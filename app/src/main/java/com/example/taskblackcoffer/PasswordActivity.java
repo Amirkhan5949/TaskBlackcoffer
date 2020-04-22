@@ -25,6 +25,10 @@ public class PasswordActivity extends AppCompatActivity {
         submit=findViewById(R.id.submit);
         password=findViewById(R.id.password);
 
+        final String Fid=getIntent().getStringExtra("Fid");
+        final String email=getIntent().getStringExtra("email");
+
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,10 +41,11 @@ public class PasswordActivity extends AppCompatActivity {
                 }
                 else {
                     Intent intent = new Intent(PasswordActivity.this, PhoneAuthentication.class);
-                    intent.putExtra("email",getIntent().getStringExtra("email"));
+                        intent.putExtra("email",getIntent().getStringExtra("email"));
                     intent.putExtra("authType", (Constants.AuthType)getIntent().getSerializableExtra("authType"));
                     intent.putExtra("auth", (Constants.Auth)getIntent().getSerializableExtra("auth"));
                     intent.putExtra("password",password.getText().toString().trim());
+                    intent.putExtra("Fid",Fid);
                     startActivity(intent);
                 }
             }

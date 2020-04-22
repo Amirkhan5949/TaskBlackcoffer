@@ -45,13 +45,16 @@ public class VerificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
-        Log.i("sjchd", "registration: "+getIntent().getStringExtra("password"));
+
 
         otp = findViewById(R.id.editText);
         verifycode = findViewById(R.id.verifycode);
         resend = findViewById(R.id.resend);
         authType = (Constants.AuthType)getIntent().getSerializableExtra("authType");
         auth = (Constants.Auth)getIntent().getSerializableExtra("auth");
+
+        Log.i("sjchd", "registration: "+authType +"   "+auth);
+
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -171,6 +174,9 @@ public class VerificationActivity extends AppCompatActivity {
         map.put(Constants.User.number,number);
         map.put(Constants.User.password,getIntent().getStringExtra("password"));
         map.put(Constants.User.login_with,authType);
+
+        if(authType==Constants.AuthType.FACEBOOK)
+            map.put(Constants.User.fb_id,getIntent().getStringExtra("Fid"));
 
         FirebaseDatabase.getInstance().getReference()
                 .child(Constants.User.key)

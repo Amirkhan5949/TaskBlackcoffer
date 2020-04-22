@@ -7,6 +7,7 @@ public class Constants {
         public static String number = "number" ;
         public static String password = "password" ;
         public static String login_with = "login_with" ;
+        public static String fb_id = "fb_id" ;
 
 
     }
