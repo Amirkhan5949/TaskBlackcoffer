@@ -10,8 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.taskblackcoffer.authUtils.Common;
+import com.example.taskblackcoffer.authUtils.callback.BooleanCallback;
+import com.example.taskblackcoffer.utils.Constants;
+import com.example.taskblackcoffer.utils.Loader;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -24,6 +29,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 
@@ -36,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private int RC_SIGN_IN = 0;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager callbackManager;
+    private Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         login = findViewById(R.id.login);
         signup = findViewById(R.id.signup);
-
+        loader = new Loader(this);
     }
 
     private void loginfb() {
@@ -132,6 +142,46 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            final String email =  account.getEmail();
+            loader.show();
+            Common.checkEmailRegistration(email, new BooleanCallback() {
+                @Override
+                public void callback(boolean isValid) {
+                    if(isValid){
+                        loader.dismiss();
+                        Log.i("dkvcdfklm", "not ok.. : ");
+                        Toast.makeText(LoginActivity.this, "User not exist.", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        FirebaseDatabase.getInstance().getReference()
+                                .child(Constants.User.key)
+                                .orderByChild(Constants.User.email)
+                                .equalTo(email)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        String number = dataSnapshot.getChildren().iterator().next().child(Constants.User.number).getValue().toString();
+                                        Toast.makeText(LoginActivity.this, ""+number, Toast.LENGTH_SHORT).show();
+
+                                        loader.dismiss();
+
+                                        Intent intent = new Intent(LoginActivity.this,VerificationActivity.class);
+                                        intent.putExtra("number",number);
+                                        intent.putExtra("authType", (Constants.AuthType.GOOGLE));
+                                        intent.putExtra("auth", (Constants.Auth.LOGIN));
+
+                                        startActivity(intent);
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Log.i("dsjcbdskj", "onCancelled: ");
+                                    }
+                                });
+                    }
+                }
+            });
 
             Toast.makeText(this, "Succesfull", Toast.LENGTH_SHORT).show();
         } catch (ApiException e) {

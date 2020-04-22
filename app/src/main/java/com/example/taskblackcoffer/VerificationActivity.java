@@ -71,7 +71,7 @@ public class VerificationActivity extends AppCompatActivity {
                     Toast.makeText(VerificationActivity.this, "Enter right otp", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    loader.show();
+                     loader.show();
                      PhoneAuthCredential credential = PhoneAuthProvider.getCredential(id, otp.getText().toString().replace(" ",""));
                      signInWithPhoneAuthCredential(credential);
                 }
@@ -148,7 +148,8 @@ public class VerificationActivity extends AppCompatActivity {
                              }
                              else {
                                  loader.dismiss();
-                                 Toast.makeText(VerificationActivity.this, "Type Login ", Toast.LENGTH_SHORT).show();
+                                 startActivity(new Intent(VerificationActivity.this, DashBoardActivity.class));
+                                 finish();
                              }
 
 
