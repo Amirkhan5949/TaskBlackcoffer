@@ -19,6 +19,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.ssw.linkedinmanager.dto.LinkedInAccessToken;
+import com.ssw.linkedinmanager.dto.LinkedInEmailAddress;
+import com.ssw.linkedinmanager.dto.LinkedInUserProfile;
+import com.ssw.linkedinmanager.events.LinkedInManagerResponse;
+import com.ssw.linkedinmanager.ui.LinkedInRequestManager;
 
 public class MainActivity extends AppCompatActivity {
     ImageView google,fb;
@@ -41,6 +46,17 @@ public class MainActivity extends AppCompatActivity {
         signup=findViewById(R.id.signup );
 
 
+
+
+        fb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linkdin();
+            }
+        });
+
+
+
         SignInButton signInButton = findViewById(R.id.sign_in_button);
 
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -58,21 +74,66 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-//        updateUI(account);
-//    }
+    private void linkdin() {
+        LinkedInRequestManager linkedInRequestManager = new LinkedInRequestManager(
+                this, new LinkedInManagerResponse() {
+            @Override
+            public void onGetAccessTokenFailed() {
+                  Log.i("dshcbsd","onGetAccessTokenFailed");
+            }
+
+            @Override
+            public void onGetAccessTokenSuccess(LinkedInAccessToken linkedInAccessToken) {
+                Log.i("dshcbsd","onGetAccessTokenFailed 2");
+            }
+
+            @Override
+            public void onGetCodeFailed() {
+                Log.i("dshcbsd","onGetAccessTokenFailed 3");
+            }
+
+            @Override
+            public void onGetCodeSuccess(String code) {
+                Log.i("dshcbsd","onGetAccessTokenFailed 4");
+            }
+
+            @Override
+            public void onGetProfileDataFailed() {
+                Log.i("dshcbsd","onGetAccessTokenFailed 5");
+            }
+
+            @Override
+            public void onGetProfileDataSuccess(LinkedInUserProfile linkedInUserProfile) {
+                Log.i("dshcbsd","onGetAccessTokenFailed 6");
+            }
+
+            @Override
+            public void onGetEmailAddressFailed() {
+                Log.i("dshcbsd","onGetAccessTokenFailed 7");
+                Toast.makeText(MainActivity.this, "failed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onGetEmailAddressSuccess(LinkedInEmailAddress linkedInEmailAddress) {
+                Log.i("dshcbsd","onGetAccessTokenFailed 8");
+               String email =  linkedInEmailAddress.getEmailAddress(); // User's email address
+                Toast.makeText(MainActivity.this, ""+email, Toast.LENGTH_SHORT).show();
+            }
+        }, "81cub3e9w2rwg1", "DGBX95JgxjIjia2c", "https://github.com/Amirkhan5949/TaskBlackcoffer");
+
+        linkedInRequestManager.showAuthenticateView(LinkedInRequestManager.MODE_EMAIL_ADDRESS_ONLY);
+    }
+
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
+
+         if (requestCode == RC_SIGN_IN) {
+
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
@@ -82,11 +143,10 @@ public class MainActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            // Signed in successfully, show authenticated UI.
-            Toast.makeText(this, "Succesfull", Toast.LENGTH_SHORT).show();
+             Toast.makeText(this, "Succesfull", Toast.LENGTH_SHORT).show();
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+
+
             Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
             Log.i("adasfsd", "handleSignInResult: "+e.toString());
         }
