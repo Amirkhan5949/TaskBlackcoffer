@@ -1,8 +1,5 @@
 package com.example.taskblackcoffer;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -14,6 +11,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.taskblackcoffer.model.User;
 import com.example.taskblackcoffer.utils.Constants;
 import com.example.taskblackcoffer.utils.Loader;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,10 +23,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
+import com.preference.PowerPreference;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -34,32 +35,47 @@ public class VerificationActivity extends AppCompatActivity {
     private EditText otp;
     private Button verifycode;
     private TextView resend;
-    private String number,id;
+    private String number, id;
     private FirebaseAuth mAuth;
     private Constants.AuthType authType;
     private Constants.Auth auth;
     private Loader loader;
+      String Fid ;
+      String email ;
+      String password ;
+      String numb  ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
+        Fid=getIntent().getStringExtra("Fid");
+        final Constants.Auth auth=(Constants.Auth)getIntent().getSerializableExtra("auth");
+        final Constants.AuthType authType=(Constants.AuthType)getIntent().getSerializableExtra("authType");
+
+        email=getIntent().getStringExtra("email");
+        password=getIntent().getStringExtra("password");
+        numb=getIntent().getStringExtra("number");
 
 
-        otp = findViewById(R.id.editText);
-        verifycode = findViewById(R.id.verifycode);
-        resend = findViewById(R.id.resend);
-        authType = (Constants.AuthType)getIntent().getSerializableExtra("authType");
-        auth = (Constants.Auth)getIntent().getSerializableExtra("auth");
+        User user = PowerPreference.getDefaultFile().getObject("user",User.class,new User());
+        user.setEmail(email);
+        user.setfId(Fid);
+        user.setfId(password);
+        user.setfId(numb);
+        user.setfId(Fid);
+        user.setAuthType(authType);
+        user.setPassword(password);
 
-        Log.i("sjchd", "registration: "+authType +"   "+auth);
+        PowerPreference.getDefaultFile().setObject("user",user);
+
+        User user1 = PowerPreference.getDefaultFile().getObject("user",User.class,new User());
+        Log.i("adsds", "onClick: "+user1.toString());
 
 
 
-        mAuth = FirebaseAuth.getInstance();
-        number = getIntent().getStringExtra("number");
-        loader = new Loader(this);
+        init();
 
         sendVerificationCode();
 
@@ -67,16 +83,14 @@ public class VerificationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(TextUtils.isEmpty(otp.getText().toString())){
+                if (TextUtils.isEmpty(otp.getText().toString())) {
                     Toast.makeText(VerificationActivity.this, "Enter Otp", Toast.LENGTH_SHORT).show();
-                }
-                else if(otp.getText().toString().replace(" ","").length()!=6){
+                } else if (otp.getText().toString().replace(" ", "").length() != 6) {
                     Toast.makeText(VerificationActivity.this, "Enter right otp", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                     loader.show();
-                     PhoneAuthCredential credential = PhoneAuthProvider.getCredential(id, otp.getText().toString().replace(" ",""));
-                     signInWithPhoneAuthCredential(credential);
+                } else {
+                    loader.show();
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(id, otp.getText().toString().replace(" ", ""));
+                    signInWithPhoneAuthCredential(credential);
                 }
 
             }
@@ -91,11 +105,24 @@ public class VerificationActivity extends AppCompatActivity {
 
     }
 
+    private void init() {
+        otp = findViewById(R.id.editText);
+        verifycode = findViewById(R.id.verifycode);
+        resend = findViewById(R.id.resend);
+        authType = (Constants.AuthType) getIntent().getSerializableExtra("authType");
+        auth = (Constants.Auth) getIntent().getSerializableExtra("auth");
+        mAuth = FirebaseAuth.getInstance();
+        number = getIntent().getStringExtra("number");
+        loader = new Loader(this);
+
+
+    }
+
     private void sendVerificationCode() {
-        new CountDownTimer(60000,1000){
+        new CountDownTimer(60000, 1000) {
             @Override
             public void onTick(long l) {
-                resend.setText(""+l/1000);
+                resend.setText("" + l / 1000);
                 resend.setEnabled(false);
             }
 
@@ -126,8 +153,8 @@ public class VerificationActivity extends AppCompatActivity {
 
                     @Override
                     public void onVerificationFailed(@NonNull FirebaseException e) {
-                        Toast.makeText(VerificationActivity.this, "Failed"+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.i("sfsfssf", "onVerificationFailed: "+e.getMessage());
+                        Toast.makeText(VerificationActivity.this, "Failed" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.i("sfsfssf", "onVerificationFailed: " + e.getMessage());
                     }
                 });        // OnVerificationStateChangedCallbacks
 
@@ -139,26 +166,26 @@ public class VerificationActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         loader.dismiss();
-                        Log.i("djcbjsdb", "onFailure: "+e.toString());
-                        Toast.makeText(VerificationActivity.this, "onFailure: "+e.toString(), Toast.LENGTH_SHORT).show();
+                        Log.i("djcbjsdb", "onFailure: " + e.toString());
+                        Toast.makeText(VerificationActivity.this, "onFailure: " + e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                         if (task.isSuccessful()) {
-                             if(auth==Constants.Auth.REGISTRATION){
-                                 registration();
-                             }
-                             else {
-                                 loader.dismiss();
-                                 startActivity(new Intent(VerificationActivity.this, DashBoardActivity.class));
-                                 finish();
-                             }
+                        if (task.isSuccessful()) {
+                            if (auth == Constants.Auth.REGISTRATION) {
+                                registration();
+                            } else {
+                                loader.dismiss();
+
+                                   startActivity(new Intent(VerificationActivity.this, DashBoardActivity.class));
+                                finish();
+                            }
 
 
                         } else {
-                            Toast.makeText(VerificationActivity.this, "Verification Filed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(VerificationActivity.this, "Verification Failed", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -168,15 +195,14 @@ public class VerificationActivity extends AppCompatActivity {
     private void registration() {
 
 
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(Constants.User.email, getIntent().getStringExtra("email"));
+        map.put(Constants.User.number, number);
+        map.put(Constants.User.password, getIntent().getStringExtra("password"));
+        map.put(Constants.User.login_with, authType);
 
-        HashMap<String,Object> map = new HashMap<>();
-        map.put(Constants.User.email,getIntent().getStringExtra("email"));
-        map.put(Constants.User.number,number);
-        map.put(Constants.User.password,getIntent().getStringExtra("password"));
-        map.put(Constants.User.login_with,authType);
-
-        if(authType==Constants.AuthType.FACEBOOK)
-            map.put(Constants.User.fb_id,getIntent().getStringExtra("Fid"));
+        if (authType == Constants.AuthType.FACEBOOK)
+            map.put(Constants.User.fb_id, getIntent().getStringExtra("Fid"));
 
         FirebaseDatabase.getInstance().getReference()
                 .child(Constants.User.key)
@@ -186,13 +212,12 @@ public class VerificationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         loader.dismiss();
-                        Intent intent =new Intent(VerificationActivity.this, DashBoardActivity.class);
+
+                        Intent intent = new Intent(VerificationActivity.this, DashBoardActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-;                        startActivity(intent);
+                        startActivity(intent);
                     }
                 });
-
-
 
 
     }

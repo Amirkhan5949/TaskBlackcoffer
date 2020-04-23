@@ -44,7 +44,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private ImageView fb;
     private EditText email,password;
     private Button register;
-    private TextView signup;
     private int RC_SIGN_IN=0;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager callbackManager;
@@ -112,7 +111,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                 loader.dismiss();
                                 Intent intent = new Intent(RegistrationActivity.this,PhoneAuthentication.class);
                                 intent.putExtra("email",email);
-                                intent.putExtra("password",password);
+                                intent.putExtra("password",password+"");
                                 intent.putExtra("authType",Constants.AuthType.EMAIL);
                                 intent.putExtra("auth",Constants.Auth.REGISTRATION);
                                 startActivity(intent);
@@ -140,7 +139,6 @@ public class RegistrationActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         register = findViewById(R.id.register);
-        signup = findViewById(R.id.signup);
         signInButton = findViewById(R.id.sign_in_button);
         loader = new Loader(this);
     }
@@ -194,8 +192,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                            if(isValid){
                                                loader.dismiss();
                                                Intent intent=new Intent(RegistrationActivity.this,PasswordActivity.class);
-                                               intent.putExtra("Fid", finalId);
-                                               intent.putExtra("email", finalEmail);
+                                               intent.putExtra("Fid", finalId+"");
+                                               intent.putExtra("email", finalEmail+"");
                                                intent.putExtra("authType",Constants.AuthType.FACEBOOK);
                                                intent.putExtra("auth",Constants.Auth.REGISTRATION);
                                                startActivity(intent);
@@ -210,7 +208,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                 }
                                 else if (email.equals("")&&(!id.equals(""))){
                                     Intent intent=new Intent(RegistrationActivity.this,EmailActivity.class);
-                                    intent.putExtra("Fid",id);
+                                    intent.putExtra("Fid",id+"");
                                     intent.putExtra("authType",Constants.AuthType.FACEBOOK);
                                     intent.putExtra("auth",Constants.Auth.REGISTRATION);
                                     startActivity(intent);
@@ -227,8 +225,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 request.executeAsync();
 
 
-                Toast.makeText(RegistrationActivity.this, "successful", Toast.LENGTH_SHORT).show();
-            }
+             }
 
             @Override
             public void onCancel() {
@@ -294,8 +291,7 @@ public class RegistrationActivity extends AppCompatActivity {
             });
 
 
-            Toast.makeText(this, "Succesfull", Toast.LENGTH_SHORT).show();
-        } catch (ApiException e) {
+         } catch (ApiException e) {
 
 
             Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();

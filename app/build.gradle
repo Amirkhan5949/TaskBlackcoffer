@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.hbb20:ccp:2.3.2'
     implementation "com.airbnb.android:lottie:3.4.0"
     implementation 'com.orhanobut:dialogplus:1.11@aar'
+    implementation 'com.aliassadi:power-preference-lib:2.0.0'
 
 
 }

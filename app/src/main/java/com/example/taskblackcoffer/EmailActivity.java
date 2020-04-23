@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,8 +13,10 @@ import android.widget.Toast;
 
 import com.example.taskblackcoffer.authUtils.Common;
 import com.example.taskblackcoffer.authUtils.callback.BooleanCallback;
+import com.example.taskblackcoffer.model.User;
 import com.example.taskblackcoffer.utils.Constants;
 import com.example.taskblackcoffer.utils.Loader;
+import com.preference.PowerPreference;
 
 import java.util.regex.Pattern;
 
@@ -33,6 +36,21 @@ public class EmailActivity extends AppCompatActivity {
         loader = new Loader(this);
 
         final String Fid=getIntent().getStringExtra("Fid");
+         final Constants.Auth auth=(Constants.Auth)getIntent().getSerializableExtra("auth");
+        final Constants.AuthType authType=(Constants.AuthType)getIntent().getSerializableExtra("authType");
+
+        User user = PowerPreference.getDefaultFile().getObject("user",User.class,new User());
+        user.setAuth(auth);
+        user.setfId(Fid);
+        user.setAuthType(authType);
+
+        PowerPreference.getDefaultFile().setObject("user",user);
+
+        User user1 = PowerPreference.getDefaultFile().getObject("user",User.class,new User());
+        Log.i("adsds", "onClick: "+user1.toString());
+
+
+
 
         skip=findViewById(R.id.skip);
         skip.setOnClickListener(new View.OnClickListener() {
@@ -65,8 +83,8 @@ public class EmailActivity extends AppCompatActivity {
                     public void callback(boolean isValid) {
                         if(isValid){
                             Intent intent=new Intent(EmailActivity.this,PasswordActivity.class);
-                            intent.putExtra("email",email);
-                            intent.putExtra("Fid",Fid);
+                            intent.putExtra("email",email+"");
+                            intent.putExtra("Fid",Fid+"");
                             intent.putExtra("authType",Constants.AuthType.FACEBOOK);
                             intent.putExtra("auth",Constants.Auth.REGISTRATION);
                             startActivity(intent);
