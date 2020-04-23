@@ -318,7 +318,6 @@ public class LoginActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         String number = dataSnapshot.getChildren().iterator().next().child(Constants.User.number).getValue().toString();
-                                        Toast.makeText(LoginActivity.this, ""+number, Toast.LENGTH_SHORT).show();
 
                                         loader.dismiss();
 
@@ -340,8 +339,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-            Toast.makeText(this, "Succesfull", Toast.LENGTH_SHORT).show();
-        } catch (ApiException e) {
+         } catch (ApiException e) {
 
 
             Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();

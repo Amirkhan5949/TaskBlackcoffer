@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="Tags"
+        android:id="@+id/tags"
+        android:icon="@drawable/tags"/>
+    <item
+        android:title="Trending"
+        android:id="@+id/trending"
+        android:icon="@drawable/trending"/>
+    <item
+        android:title="Explore"
+        android:icon="@drawable/ic_explore"
+        android:id="@+id/explore"/>
+
+    <item
+        android:title="Saved"
+        android:icon="@drawable/heart"
+        android:id="@+id/saved"/>
+</menu>

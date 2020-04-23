@@ -21,137 +21,140 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-
-
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
-            Intent intent=new Intent(SplashActivity.this,DashBoardActivity.class);
+        Intent intent=new Intent(SplashActivity.this,DashBoardActivity.class);
             startActivity(intent);
-            finish();
-        }
-        else{
-            User user = PowerPreference.getDefaultFile().getObject("user",User.class);
-            if(user==null){
-                Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            else {
-                if(user.getAuth()== Constants.Auth.REGISTRATION){
-                     if(user.getAuthType()==Constants.AuthType.GOOGLE){
-                        if(user.getPassword()==null){
-                            Intent intent=new Intent(SplashActivity.this,PasswordActivity.class);
-                            intent.putExtra("email",user.getEmail());
-                            intent.putExtra("auth",user.getAuth());
-                            intent.putExtra("authType",user.getAuthType());
-                            startActivity(intent);
-                            finish();
-                        }
-                        else if(user.getNumber()==null){
-                            Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
-                            intent.putExtra("email",user.getEmail());
-                            intent.putExtra("auth",user.getAuth());
-                            intent.putExtra("authType",user.getAuthType());
-                            intent.putExtra("password",user.getPassword());
-                            startActivity(intent);
-                            finish();
-                        }
-                     }
-                     else if(user.getAuthType()==Constants.AuthType.FACEBOOK){
-                         if(user.getEmail()==null){
-                             Intent intent=new Intent(SplashActivity.this,EmailActivity.class);
-                             intent.putExtra("Fid",user.getfId());
-                             intent.putExtra("auth",user.getAuth());
-                             intent.putExtra("authType",user.getAuthType());
-                             startActivity(intent);
-                             finish();
-                         }
-                         if(user.getPassword()==null){
-                             Intent intent=new Intent(SplashActivity.this,PasswordActivity.class);
-                             intent.putExtra("Fid",user.getfId());
-                             intent.putExtra("email",user.getEmail());
-                             intent.putExtra("auth",user.getAuth());
-                             intent.putExtra("authType",user.getAuthType());
-                             startActivity(intent);
-                             finish();
-                         }
-                         else if(user.getNumber()==null){
-                             Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
-                             intent.putExtra("Fid",user.getfId());
-                             intent.putExtra("email",user.getEmail());
-                             intent.putExtra("auth",user.getAuth());
-                             intent.putExtra("authType",user.getAuthType());
-                             intent.putExtra("password",user.getPassword());
-                             startActivity(intent);
-                             finish();
-                         }
-
-                     }
-                     else if(user.getAuthType()==Constants.AuthType.EMAIL){
-                         if(user.getNumber()==null){
-                             Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
-                             intent.putExtra("email",user.getEmail());
-                             intent.putExtra("auth",user.getAuth());
-                             intent.putExtra("authType",user.getAuthType());
-                             intent.putExtra("password",user.getPassword());
-                             startActivity(intent);
-                             finish();
-                         }
-                     }
-                }
-                else if(user.getAuth()== Constants.Auth.LOGIN){
-                    if(user.getAuthType()==Constants.AuthType.GOOGLE){
-                         if(user.getNumber()==null){
-
-                         }
-                         else{
-                             Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
-                             intent.putExtra("email",user.getEmail());
-                             intent.putExtra("auth",user.getAuth());
-                             intent.putExtra("authType",user.getAuthType());
-                             intent.putExtra("password",user.getPassword());
-                             startActivity(intent);
-                             finish();
-                         }
-                    }
-                    else if(user.getAuthType()==Constants.AuthType.FACEBOOK){
-                        if(user.getNumber()==null){
-                            Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else{
-                            Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
-                            intent.putExtra("Fid",user.getfId());
-                            intent.putExtra("email",user.getEmail());
-                            intent.putExtra("auth",user.getAuth());
-                            intent.putExtra("authType",user.getAuthType());
-                            intent.putExtra("password",user.getPassword());
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-                    else if(user.getAuthType()==Constants.AuthType.EMAIL){
-                        if(user.getNumber()==null){
-                            Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else{
-                            Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
-                            intent.putExtra("email",user.getEmail());
-                            intent.putExtra("auth",user.getAuth());
-                            intent.putExtra("authType",user.getAuthType());
-                            intent.putExtra("password",user.getPassword());
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-                }
-            }
-        }
 
 
+
+//        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+//            Intent intent=new Intent(SplashActivity.this,DashBoardActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
+//        else{
+//            User user = PowerPreference.getDefaultFile().getObject("user",User.class);
+//            if(user==null){
+//                Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//            else {
+//                if(user.getAuth()== Constants.Auth.REGISTRATION){
+//                     if(user.getAuthType()==Constants.AuthType.GOOGLE){
+//                        if(user.getPassword()==null){
+//                            Intent intent=new Intent(SplashActivity.this,PasswordActivity.class);
+//                            intent.putExtra("email",user.getEmail());
+//                            intent.putExtra("auth",user.getAuth());
+//                            intent.putExtra("authType",user.getAuthType());
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                        else if(user.getNumber()==null){
+//                            Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
+//                            intent.putExtra("email",user.getEmail());
+//                            intent.putExtra("auth",user.getAuth());
+//                            intent.putExtra("authType",user.getAuthType());
+//                            intent.putExtra("password",user.getPassword());
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                     }
+//                     else if(user.getAuthType()==Constants.AuthType.FACEBOOK){
+//                         if(user.getEmail()==null){
+//                             Intent intent=new Intent(SplashActivity.this,EmailActivity.class);
+//                             intent.putExtra("Fid",user.getfId());
+//                             intent.putExtra("auth",user.getAuth());
+//                             intent.putExtra("authType",user.getAuthType());
+//                             startActivity(intent);
+//                             finish();
+//                         }
+//                         if(user.getPassword()==null){
+//                             Intent intent=new Intent(SplashActivity.this,PasswordActivity.class);
+//                             intent.putExtra("Fid",user.getfId());
+//                             intent.putExtra("email",user.getEmail());
+//                             intent.putExtra("auth",user.getAuth());
+//                             intent.putExtra("authType",user.getAuthType());
+//                             startActivity(intent);
+//                             finish();
+//                         }
+//                         else if(user.getNumber()==null){
+//                             Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
+//                             intent.putExtra("Fid",user.getfId());
+//                             intent.putExtra("email",user.getEmail());
+//                             intent.putExtra("auth",user.getAuth());
+//                             intent.putExtra("authType",user.getAuthType());
+//                             intent.putExtra("password",user.getPassword());
+//                             startActivity(intent);
+//                             finish();
+//                         }
+//
+//                     }
+//                     else if(user.getAuthType()==Constants.AuthType.EMAIL){
+//                         if(user.getNumber()==null){
+//                             Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
+//                             intent.putExtra("email",user.getEmail());
+//                             intent.putExtra("auth",user.getAuth());
+//                             intent.putExtra("authType",user.getAuthType());
+//                             intent.putExtra("password",user.getPassword());
+//                             startActivity(intent);
+//                             finish();
+//                         }
+//                     }
+//                }
+//                else if(user.getAuth()== Constants.Auth.LOGIN){
+//                    if(user.getAuthType()==Constants.AuthType.GOOGLE){
+//                         if(user.getNumber()==null){
+//
+//
+//                         }
+//                         else{
+//                             Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
+//                             intent.putExtra("email",user.getEmail());
+//                             intent.putExtra("auth",user.getAuth());
+//                             intent.putExtra("authType",user.getAuthType());
+//                             intent.putExtra("password",user.getPassword());
+//                             startActivity(intent);
+//                             finish();
+//                         }
+//                    }
+//                    else if(user.getAuthType()==Constants.AuthType.FACEBOOK){
+//                        if(user.getNumber()==null){
+//                            Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                        else{
+//                            Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
+//                            intent.putExtra("Fid",user.getfId());
+//                            intent.putExtra("email",user.getEmail());
+//                            intent.putExtra("auth",user.getAuth());
+//                            intent.putExtra("authType",user.getAuthType());
+//                            intent.putExtra("password",user.getPassword());
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                    }
+//                    else if(user.getAuthType()==Constants.AuthType.EMAIL){
+//                        if(user.getNumber()==null){
+//                            Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                        else{
+//                            Intent intent=new Intent(SplashActivity.this,PhoneAuthentication.class);
+//                            intent.putExtra("email",user.getEmail());
+//                            intent.putExtra("auth",user.getAuth());
+//                            intent.putExtra("authType",user.getAuthType());
+//                            intent.putExtra("password",user.getPassword());
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//
 
 
     }

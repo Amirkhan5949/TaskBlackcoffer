@@ -43,7 +43,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private ImageView fb;
     private EditText email,password;
-    private Button register;
+    private Button register,login;
     private int RC_SIGN_IN=0;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager callbackManager;
@@ -62,6 +62,14 @@ public class RegistrationActivity extends AppCompatActivity {
         loginfb();
 
         googleopt();
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(RegistrationActivity.this,LoginActivity.class);
+                startActivity(intent);
+            }
+        });
 
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +146,7 @@ public class RegistrationActivity extends AppCompatActivity {
         fb = findViewById(R.id.imageView2);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        login = findViewById(R.id.login);
         register = findViewById(R.id.register);
         signInButton = findViewById(R.id.sign_in_button);
         loader = new Loader(this);
@@ -201,7 +210,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                            }
                                            else {
                                                loader.dismiss();
-                                               Toast.makeText(RegistrationActivity.this, "You already registeered.", Toast.LENGTH_SHORT).show();
+                                               Toast.makeText(RegistrationActivity.this, "You already registered.", Toast.LENGTH_SHORT).show();
                                            }
                                        }
                                    });
