@@ -116,6 +116,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                 intent.putExtra("authType",Constants.AuthType.EMAIL);
                                 intent.putExtra("auth",Constants.Auth.REGISTRATION);
                                 startActivity(intent);
+                                finish();
+
                             }
                             else {
                                 loader.dismiss();
@@ -197,6 +199,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                                intent.putExtra("authType",Constants.AuthType.FACEBOOK);
                                                intent.putExtra("auth",Constants.Auth.REGISTRATION);
                                                startActivity(intent);
+                                               finish();
                                            }
                                            else {
                                                loader.dismiss();
@@ -211,6 +214,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                     intent.putExtra("authType",Constants.AuthType.FACEBOOK);
                                     intent.putExtra("auth",Constants.Auth.REGISTRATION);
                                     startActivity(intent);
+                                    finish();
+
                                 }
 
 
@@ -277,6 +282,8 @@ public class RegistrationActivity extends AppCompatActivity {
                         intent.putExtra("authType",Constants.AuthType.GOOGLE);
                         intent.putExtra("auth",Constants.Auth.REGISTRATION);
                         startActivity(intent);
+                        finish();
+
                     }
                     else {
                         loader.dismiss();

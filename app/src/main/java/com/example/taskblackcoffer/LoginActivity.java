@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(LoginActivity.this,RegistrationActivity.class);
                 startActivity(intent);
+
             }
         });
 
@@ -112,6 +113,8 @@ public class LoginActivity extends AppCompatActivity {
                                            intent.putExtra("authType", (Constants.AuthType.EMAIL));
                                            intent.putExtra("auth", (Constants.Auth.LOGIN));
                                            startActivity(intent);
+                                           finish();
+
                                        }else {
                                            loader.dismiss();
                                            Toast.makeText(LoginActivity.this, "Enter the right password", Toast.LENGTH_SHORT).show();
@@ -193,7 +196,73 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-                // App code
+                loader.show();
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.v("LoginActivity", response.toString());
+
+                                // Application code
+                                String email = "";
+                                String id = "";
+
+                                try {
+                                    email = object.getString("email");
+
+                                }
+                                catch (JSONException e) {
+                                    e.printStackTrace();
+
+                                }
+                                try {
+                                    id= object.getString("id");
+
+                                    FirebaseDatabase.getInstance().getReference()
+                                            .child(Constants.User.key)
+                                            .orderByChild(Constants.User.fb_id)
+                                            .equalTo(id)
+                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    loader.dismiss();
+                                                    if(dataSnapshot.getChildrenCount()==1){
+                                                        String number = dataSnapshot.getChildren().iterator().next().child(Constants.User.number).getValue().toString();
+                                                        Intent intent = new Intent(LoginActivity.this,VerificationActivity.class);
+                                                        intent.putExtra("number",number);
+                                                        intent.putExtra("authType", (Constants.AuthType.FACEBOOK));
+                                                        intent.putExtra("auth", (Constants.Auth.LOGIN));
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }else {
+
+                                                        Toast.makeText(LoginActivity.this, "you have not registered", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+
+                                }
+
+
+
+
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender,birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+
+
 
 
             }

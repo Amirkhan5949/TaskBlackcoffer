@@ -186,8 +186,9 @@ public class VerificationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         loader.dismiss();
-                        startActivity(new Intent(VerificationActivity.this, DashBoardActivity.class));
-                        finish();
+                        Intent intent =new Intent(VerificationActivity.this, DashBoardActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+;                        startActivity(intent);
                     }
                 });
 

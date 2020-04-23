@@ -64,7 +64,7 @@ public class PhoneAuthentication extends AppCompatActivity {
                                 intent.putExtra("Fid",Fid);
 
                                 startActivity(intent);
-                                finish();
+
                             }
                             else {
                                 Toast.makeText(PhoneAuthentication.this, "Number exist.", Toast.LENGTH_SHORT).show();

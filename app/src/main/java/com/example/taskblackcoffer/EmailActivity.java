@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 public class EmailActivity extends AppCompatActivity {
     private EditText email;
-    private Button submit;
+    private Button submit,skip;
     private Loader loader;
 
 
@@ -33,6 +33,15 @@ public class EmailActivity extends AppCompatActivity {
         loader = new Loader(this);
 
         final String Fid=getIntent().getStringExtra("Fid");
+
+        skip=findViewById(R.id.skip);
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(EmailActivity.this,PasswordActivity.class);
+                startActivity(intent);
+            }
+        });
 
      submit.setOnClickListener(new View.OnClickListener() {
          @Override
@@ -61,6 +70,7 @@ public class EmailActivity extends AppCompatActivity {
                             intent.putExtra("authType",Constants.AuthType.FACEBOOK);
                             intent.putExtra("auth",Constants.Auth.REGISTRATION);
                             startActivity(intent);
+
                         }
                         else {
                             Toast.makeText(EmailActivity.this, "You already registeered.", Toast.LENGTH_SHORT).show();

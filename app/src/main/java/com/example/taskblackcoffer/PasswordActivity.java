@@ -47,6 +47,8 @@ public class PasswordActivity extends AppCompatActivity {
                     intent.putExtra("password",password.getText().toString().trim());
                     intent.putExtra("Fid",Fid);
                     startActivity(intent);
+                    finish();
+
                 }
             }
         });
