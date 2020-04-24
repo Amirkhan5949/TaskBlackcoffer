@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class VerificationActivity extends AppCompatActivity {
     private EditText otp;
     private Button verifycode;
-    private TextView resend;
+    private TextView resend,no;
     private String number, id;
     private FirebaseAuth mAuth;
     private Constants.AuthType authType;
@@ -59,6 +59,7 @@ public class VerificationActivity extends AppCompatActivity {
         numb=getIntent().getStringExtra("number");
 
 
+
         User user = PowerPreference.getDefaultFile().getObject("user",User.class,new User());
         user.setEmail(email);
         user.setfId(Fid);
@@ -68,14 +69,18 @@ public class VerificationActivity extends AppCompatActivity {
         user.setAuthType(authType);
         user.setPassword(password);
 
+
         PowerPreference.getDefaultFile().setObject("user",user);
 
         User user1 = PowerPreference.getDefaultFile().getObject("user",User.class,new User());
         Log.i("adsds", "onClick: "+user1.toString());
 
 
-
         init();
+
+        no.setText(numb);
+        Log.i("wwdsfsf", "onCreate: "+numb);
+
 
         sendVerificationCode();
 
@@ -109,6 +114,7 @@ public class VerificationActivity extends AppCompatActivity {
         otp = findViewById(R.id.editText);
         verifycode = findViewById(R.id.verifycode);
         resend = findViewById(R.id.resend);
+        no = findViewById(R.id.mobile);
         authType = (Constants.AuthType) getIntent().getSerializableExtra("authType");
         auth = (Constants.Auth) getIntent().getSerializableExtra("auth");
         mAuth = FirebaseAuth.getInstance();

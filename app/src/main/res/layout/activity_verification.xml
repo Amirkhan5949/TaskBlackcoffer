@@ -41,15 +41,49 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <TextView
+        android:id="@+id/text15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="We send the otp of your register no"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="Check otp on this no :-"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text15" />
+
+
+    <TextView
+        android:id="@+id/mobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="9144155949"
+        android:textColor="@color/green"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/text15" />
+
+    <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="32dp"
         android:textSize="18sp"
         android:text="Enter Verification Code"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
     <EditText
         android:id="@+id/editText"
@@ -99,6 +133,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="40dp"
         android:background="@drawable/button"
+        android:textColor="@color/white"
         android:text="Verify Code"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

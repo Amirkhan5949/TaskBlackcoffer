@@ -23,7 +23,7 @@ import com.preference.PowerPreference;
 
 public class DashBoardActivity extends AppCompatActivity {
 
-    Button logout;
+
     FrameLayout frameLayout;
     BottomNavigationView bottomNavigationView;
     @Override
@@ -31,23 +31,10 @@ public class DashBoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
 
-//        logout=findViewById(R.id.logout);
         frameLayout=findViewById(R.id.frame);
         bottomNavigationView=findViewById(R.id.bottom);
+        replace(new TagsFragment());
 
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                PowerPreference.clearAllData();
-//
-//                Intent intent=new Intent(DashBoardActivity.this,LoginActivity.class);
-//                startActivity(intent);
-//
-//                finish();
-//
-//            }
-//        });
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

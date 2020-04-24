@@ -43,7 +43,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private ImageView fb;
     private EditText email,password;
-    private Button register,login;
+    private Button register;
+    private TextView login;
     private int RC_SIGN_IN=0;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager callbackManager;

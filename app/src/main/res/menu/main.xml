@@ -4,7 +4,7 @@
     <item
         android:title="Tags"
         android:id="@+id/tags"
-        android:icon="@drawable/tags"/>
+        android:icon="@drawable/tafs"/>
     <item
         android:title="Trending"
         android:id="@+id/trending"
@@ -16,6 +16,6 @@
 
     <item
         android:title="Saved"
-        android:icon="@drawable/heart"
+        android:icon="@drawable/save"
         android:id="@+id/saved"/>
 </menu>
