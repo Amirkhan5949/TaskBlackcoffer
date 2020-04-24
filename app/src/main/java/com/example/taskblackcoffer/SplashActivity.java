@@ -29,6 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         }
         else{
             User user = PowerPreference.getDefaultFile().getObject("user",User.class);
+            Log.i("sdajcvsd", "onCreate: "+user);
             if(user==null){
                 Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
                 startActivity(intent);
@@ -57,6 +58,7 @@ public class SplashActivity extends AppCompatActivity {
                      }
                      else if(user.getAuthType()==Constants.AuthType.FACEBOOK){
                          if(user.getEmail()==null){
+                             Log.i("sdajcvsd", "getEmail: ");
                              Intent intent=new Intent(SplashActivity.this,EmailActivity.class);
                              intent.putExtra("Fid",user.getfId());
                              intent.putExtra("auth",user.getAuth());
@@ -64,7 +66,8 @@ public class SplashActivity extends AppCompatActivity {
                              startActivity(intent);
                              finish();
                          }
-                         if(user.getPassword()==null){
+                         else if(user.getPassword()==null){
+                             Log.i("sdajcvsd", "getPassword: ");
                              Intent intent=new Intent(SplashActivity.this,PasswordActivity.class);
                              intent.putExtra("Fid",user.getfId());
                              intent.putExtra("email",user.getEmail());

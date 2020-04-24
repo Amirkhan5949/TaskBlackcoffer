@@ -226,6 +226,7 @@ public class LoginActivity extends AppCompatActivity {
                                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    Log.i("sdcbsd", "onDataChange: "+dataSnapshot.toString());
                                                     loader.dismiss();
                                                     if(dataSnapshot.getChildrenCount()==1){
                                                         String number = dataSnapshot.getChildren().iterator().next().child(Constants.User.number).getValue().toString();

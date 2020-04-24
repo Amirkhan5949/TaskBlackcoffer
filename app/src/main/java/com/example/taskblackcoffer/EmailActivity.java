@@ -57,6 +57,10 @@ public class EmailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(EmailActivity.this,PasswordActivity.class);
+                intent.putExtra("email",email+"");
+                intent.putExtra("Fid",Fid+"");
+                intent.putExtra("authType",Constants.AuthType.FACEBOOK);
+                intent.putExtra("auth",Constants.Auth.REGISTRATION);
                 startActivity(intent);
             }
         });
